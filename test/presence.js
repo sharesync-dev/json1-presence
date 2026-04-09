@@ -1,8 +1,8 @@
 const assert = require("assert");
-const Delta = require("quill-delta");
+const Delta = require("@sharesync/quill-delta");
 const { type } = require("../dist/json1.release");
 
-type.registerSubtype(require("rich-text"));
+type.registerSubtype(require("@sharesync/rich-text"));
 
 describe("presences", () => {
   it("transforms json1 only presences", () => {
