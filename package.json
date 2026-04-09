@@ -1,5 +1,5 @@
 {
-  "name": "@shaxpir/ot-json1-presence",
+  "name": "@sharesync/ot-json1-presence",
   "version": "3.0.1",
   "description": "JSON OT type with presence",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
     "mocha": "^10.2.0",
     "ot-fuzzer": "1.3",
     "ot-simple": "^1.0.0",
-    "@shaxpir/rich-text": "5.0.2",
+    "@sharesync/rich-text": "5.0.2",
     "terser": "^5.19.2",
     "typescript": "^5.2.2"
   },
@@ -32,7 +32,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:shaxpir/json1-presence.git"
+    "url": "git@github.com:sharesync-dev/json1-presence.git"
   },
   "keywords": [
     "ot",
@@ -41,7 +41,10 @@
   "author": "Joseph Gentle <me@josephg.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/shaxpir/json1-presence/issues"
+    "url": "https://github.com/sharesync-dev/json1-presence/issues"
   },
-  "homepage": "https://github.com/shaxpir/json1-presence"
+  "homepage": "https://github.com/sharesync-dev/json1-presence",
+  "publishConfig": {
+    "access": "public"
+  }
 }
