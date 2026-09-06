@@ -1241,6 +1241,15 @@ function invert(op: JSONOp): JSONOp {
         w.write('d', c.p) // p -> d
         heldPick[c.p] = r.clone()
       }
+      // NOTE: `r: true` is ambiguous in the json1 wire format — it encodes
+      // BOTH "remove whatever is here (content unknown)" AND "remove the
+      // literal boolean `true`". A bare invert() must therefore map r -> i as
+      // written; for a value-less remove that fabricates an inserted `true`
+      // (seen in production as `meta.updated_at.utc_time === true` after a
+      // ShareDB rollback). invert() cannot detect that case from the op
+      // alone, so it is NOT changed here; callers that may hold value-less
+      // removes must use invertWithDoc()/makeInvertible(op, doc) with the
+      // pre-op document, which captures the real content first.
       if (c.r !== undefined) w.write('i', c.r) // r -> i
   
       if (c.d != null) {

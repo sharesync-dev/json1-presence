@@ -867,6 +867,32 @@ describe('json1', () => {
         assert.deepStrictEqual(actual, normalized, 'inverted op not canonical')
       }
 
+      // `r: true` is ambiguous on the wire: "remove unknown content" AND
+      // "remove the literal boolean true" look identical. A bare invert()
+      // therefore maps it to `i: true` — correct for the boolean case (see
+      // 'transforms indexes based on pick locations' below), but a fabricated
+      // value for a value-less remove. This pins that documented behaviour;
+      // the supported path for value-less removes is makeInvertible/invertWithDoc.
+      it('bare invert() of a value-less remove is lossy by design (maps r:true -> i:true)', () => {
+        const inverse = type.invert(['meta', 'updated_at', 'utc_time', {r: true, i: 'NEW'}])
+        assert.deepStrictEqual(inverse, ['meta', 'updated_at', 'utc_time', {r: 'NEW', i: true}])
+      })
+
+      it('makeInvertible then invert restores the real old value (the supported path)', () => {
+        const doc = {meta: {updated_at: {utc_time: 'OLD'}}}
+        const lossy = ['meta', 'updated_at', 'utc_time', {r: true, i: 'NEW'}]
+        const invertible = type.makeInvertible(lossy, doc)
+        assert.deepStrictEqual(invertible, ['meta', 'updated_at', 'utc_time', {r: 'OLD', i: 'NEW'}])
+        const inverse = type.invert(invertible)
+        assert.deepStrictEqual(type.apply(type.apply(doc, lossy), inverse), doc)
+      })
+
+      it('still inverts a remove WITH captured content', () => i(
+        ['meta', 'updated_at', 'utc_time', {r: 'OLD', i: 'NEW'}],
+        ['meta', 'updated_at', 'utc_time', {r: 'NEW', i: 'OLD'}],
+        {meta: {updated_at: {utc_time: 'OLD'}}}
+      ))
+
       it('inverts child operations', () => i(
         [{es: ['x']}],
         [{es: [{d:'x'}]}],
